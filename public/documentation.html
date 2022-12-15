@@ -46,14 +46,6 @@
         </thead>
 
         <tbody>
-            <tr>
-                <td>Allow existing users log in</td>
-                <td>/login</td>
-                <td>POST</td>
-                <td>-</td>
-                <td>-</td>
-                <td>A JSON object holding data about the user including the hashed password</td>
-            </tr>
 
             <tr>
                 <td>Get a list of all movies</td>
@@ -91,28 +83,12 @@
                 <td>A JSON object holding data about the data of a director</td>
             </tr>
 
-            <tr>
-                <td>Get all Users</td>
-                <td>/users</td>
-                <td>GET</td>
-                <td>-</td>
-                <td>-</td>
-                <td> A JSON object holding data of all users</td>
-            </tr>
 
-            <tr>
-                <td>Get a User by Username</td>
-                <td>/users/:Username</td>
-                <td>GET</td>
-                <td>-</td>
-                <td>-</td>
-                <td> A JSON object holding data of a specific user</td>
-            </tr>
 
             <tr>
                 <td>Allow new users to Register</td>
                 <td>/users</td>
-                <td>POST</td>
+                <td>PUT</td>
                 <td>-</td>
                 <td>A JSON object holding data about the users to add, structured like this { "name" : "Vincent", "Password": "1234", "Email": ""vincentokafor@gmail.com", "Birthday": "02-05-1996" } </td>
                 <td>A JSON object holding data about the user that was added, structured like this { "name" : "Vincent", "Password": "1234", "Email": "vincentokafor@gmail.com", "Birthday": "02-05-1996" } including an ID </td>
@@ -121,7 +97,7 @@
             <tr>
                 <td>Allow new users update their user info</td>
                 <td>/users/:Username</td>
-                <td>PUT</td>
+                <td>POST</td>
                 <td>:Username</td>
                 <td>-</td>
                 <td>A JSON object holding data about the updated information</td>

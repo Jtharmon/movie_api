@@ -1,3 +1,10 @@
+const mongoose = require('mongoose');
+const Models = require('./models.js');
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+
 const express = require('express');
 const morgan = require('morgan');
 const fs = require('fs'); // import built in node modules fs and path 
@@ -23,160 +30,111 @@ app.use((err, req, res, next) => {
     // logic
 });
 
-let topBooks = [
-    {
-        title: 'Harry Potter and the Sorcerer\'s Stone',
-        author: 'J.K. Rowling'
-    },
-    {
-        title: 'Lord of the Rings',
-        author: 'J.R.R. Tolkien'
-    },
-    {
-        title: 'Twilight',
-        author: 'Stephanie Meyer'
-    }
-];
 
-let topMovies = [
-    {
-        title: 'Black Panther',
-        director: 'Ryan Coogler',
-        release_date: '2018'
-    },
-    {
-        title: 'Avengers Endgame',
-        director: 'Anthony and Joe Russo',
-        release_date: '2019'
-    },
-    {
-        title: 'Avengers Infinity War',
-        director: 'Anthony and Joe Russo',
-        release_date: '2018'
-    },
-    {
-        title: 'Captian America Civil War',
-        director: 'Anthony Russo',
-        release_date: '2016'
-    },
-    {
-        title: 'Spiderman No Way Home',
-        director: 'Jon Watts',
-        release_date: '2021'
-    },
-    {
-        title: 'Shang Chi',
-        director: 'Destin Daniel Cretton',
-        release_date: '2021'
-    },
-    {
-        title: 'Deadpool',
-        director: 'Tim Miller',
-        release_date: '2016'
-    },
-    {
-        title: 'Thor Ragnarok',
-        director: 'Taika Waititi',
-        release_date: '2017'
-    },
-    {
-        title: 'Amazing Spiderman 2',
-        director: 'Marc Webb',
-        release_date: '2014'
-    },
-    {
-        title: 'Logan',
-        director: 'James Mangold',
-        release_date: '2017'
-    }
-]
 
 // GET requests
 app.get('/movie-api/', (req, res) => {
     res.send('Welcome to my book club!');
 });
 
+//RETURNS DOCUMENTATIONHTML
 app.get('/movie-api/documentation', (req, res) => {
     res.sendFile('public/documentation.html', { root: __dirname });
+    
 });
 
-app.get('/movie-api/books', (req, res) => {
-    res.json(topBooks);
-});
-
+//RETURNS A LIST OF MOVIES
 app.get('/movie-api/movies', (req, res) => {
-    res.json(topMovies);
+    Movies.find({}, (err, movies) => {
+        res.send(movies)
+    })
 }); 
 
-app.post('/movie-api/books', (req, res) => {
-    let book = req.body
-    topBooks.push(book)
-    res.json(book)
-})
 
-app.post('/movie-api/movies', (req, res) => {
-    let movie = req.body
-    topMovies.push(movie)
-    res.json(movie)
-})
-
-app.delete('/movie-api/books/:title', (req, res) => {
-    let book = topBooks.find((book) => { return book.title === req.params.title })
-
-    if (book) {
-        topBooks = topBooks.filter((book) => { return book.title !== req.params.title });
-        res.status(200).send('book ' + req.params.title + ' was deleted. ');
-    }
-    else {
-        res.status(404).send();
-    }
-})
-
-app.delete('/movie-api/movies/:title', (req, res) => {
-    let movie = topMovies.find((movie) => { return movie.title === req.params.title })
-
-    if (movie) {
-        topMovies = topMovies.filter((movie) => { return movie.title !== req.params.title });
-        res.status(200).send('movie ' + req.params.title + ' was deleted. ');
-    }
-
-    else {
-        res.status(404).send();
-    }
-})
-
+//GETS DATA ABOUT A MOVIE BY MOVIE TITLE
 app.get('/movie-api/movie/:title', (req, res) => {
-    let movie = topMovies.find((movie) => { return movie.title === req.params.title })
-    res.json(movie)
 
 })
 
-app.get('/movie-api/movies/:genre', (req, res) => {
-    res.send('Successful GET request returning ' + req.params.genre + ' specific movies');
-});
+//RETURNS DATA ABOUT A GENRE
+app.get('/movie-api/genre/:name', (req, res) => {
+    Movies.findOne({ 'Genre.Name': req.params.name }, (err, movies) => {
+        res.send(movies.Genre)
 
+    })
+})
+
+//RETUENS DATA ABOUT A DIRECTOR
 app.get('/movie-api/movies/director/:name', (req, res) => {
-    res.send('Successful GET request returning ' + req.params.name + ' specific data');
+    Movies.findOne({ 'Director.Name': req.params.name }, (err, movies) => {
+        res.send(movies?.Director);
+    })
 });
 
-app.put('/movie-api/users', (req, res) => {
-    res.send('Successful PUT creating new user');
+//ALLOWS NEW REGISTERS 
+app.put('/movie-api/user/:userid', (req, res) => {
+    const user = Users.create({
+        userid: req.body.userid,
+        Name: req.body.Name,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+        MovieListids: req.body.MovieListids,
+        Password: req.body.Password
+    }).then((user) => {
+        res.status(201).send(user)
+    })
 });
 
+//ALLOWS USERS TO UPDATE THEIR USER INFO
 app.post('/movie-api/users', (req, res) => {
-    res.send('Successful POST updating user info');
+    Users.findOneAndUpdate({ 'userid': req.body.userId }, { $set: req.body }, { new: true }, (err, user) => {
+        res.send(user)
+    })
+       
 });
 
-app.put('/movie-api/user/favoriteMovie', (req, res) => {
-    res.send('Successful PUT request adding favorite movie');
+//ALLOWS USERS TO ADD MOVIE TO THEIR FAVORITE MOVIE LIST
+app.post('/movie-api/user/favoriteMovie', async (req, res) => {
+    Users.findOneAndUpdate({ 'userid': req.body.userId }, { $push: { 'MovieListids': req.body.Movieid } }).then(user => {
+        res.status(201).send("User has successfully added " + req.body.Movieid + " to their movie list");
+    })
 });
 
-app.delete('/movie-api/user/favoriteMovie/:title', (req, res) => {
-    res.send('Successful DELETE request removing data');
+//ALLOWS USERS TO REMOVE A MOVIE FROM THEIR FAVORITE MOVIE LIST
+app.delete('/movie-api/user/:userid/favoriteMovie/:MovieID', (req, res) => {
+        Users.findOneAndUpdate(
+            { userid: req.params.userid },
+            {
+                $pull: { MovieListids: req.params.MovieID },
+            },
+            { new: true },
+            (err, updatedUser) => {
+                console.log(updatedUser.MovieListids)
+                if (err) {
+                    console.log(err);
+                    res.status(500).send('Error ' + err);
+                } else {
+                    res.json(updatedUser);
+                }
+            }
+        );
 });
 
-app.delete('/movie-api/user/:id', (req, res) => {
-    res.send('Successful DELETE request removing data on the user');
+//ALLOWS USERS TO DEREGISTER THEIR ACCOUNT 
+app.delete('/movie-api/user/:userid', (req, res) => {
+    Users.findOneAndRemove({ userid: req.params.userid })
+            .then((user) => {
+                if (!user) {
+                    res.status(400).send(req.params.Username + ' was not found');
+                } else {
+                    res.status(200).send(req.params.Username + ' was deleted.');
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).send('Error: ' + err);
+            });
+res.send('Successful DELETE request removing data on the user');
 });
 
 app.listen(8080, () => {
