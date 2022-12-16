@@ -73,18 +73,25 @@ app.get('/movie-api/movies/director/:name', (req, res) => {
 
 //ALLOWS NEW REGISTERS 
 app.put('/movie-api/user/:userid', (req, res) => {
-    const user = Users.create({
-        userid: req.body.userid,
-        Name: req.body.Name,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday,
-        MovieListids: req.body.MovieListids,
-        Password: req.body.Password
-    }).then((user) => {
-        res.status(201).send(user)
-    })
+    Users.findOne({ 'userid': req.params.userid })
+        .then((user) => {
+            if (user) {
+                res.status(500).send("User already exists");
+            }
+            else {
+                Users.create({
+                    userid: req.body.userid,
+                    Name: req.body.Name,
+                    Email: req.body.Email,
+                    Birthday: req.body.Birthday,
+                    MovieListids: req.body.MovieListids,
+                    Password: req.body.Password
+                }).then((user) => {
+                    res.status(201).send(user)
+                })
+            }
+        })
 });
-
 //ALLOWS USERS TO UPDATE THEIR USER INFO
 app.post('/movie-api/users', (req, res) => {
     Users.findOneAndUpdate({ 'userid': req.body.userId }, { $set: req.body }, { new: true }, (err, user) => {
