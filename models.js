@@ -22,7 +22,7 @@ let userSchema = mongoose.Schema({
     Email: { type: String, required: true },
     Birthday: Date,
     userid: { type: Number, required: true },
-    MovieListids: [{ type: Array, required: true }]
+    MovieListids: { type: [Number], required: true }
 });
 
 let Movie = mongoose.model('Movie', movieSchema);
