@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+    bcrypt = require('bcryptjs');
 
 let movieSchema = mongoose.Schema({
     Title: { type: String, required: true },
@@ -24,6 +25,13 @@ let userSchema = mongoose.Schema({
     userid: { type: Number, required: true },
     MovieListids: { type: [Number], required: true }
 });
+
+
+userSchema.methods.validatePassword = function (Password) {
+    return Password === this.Password;
+};
+
+
 
 let Movie = mongoose.model('Movie', movieSchema);
 let User = mongoose.model('User', userSchema);
