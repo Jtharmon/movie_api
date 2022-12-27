@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 const passport = require('passport');
+const cors = require('cors');
+
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -28,6 +30,8 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 app.use(methodOverride());
+app.use(cors());
+
 
 app.use((err, req, res, next) => {
     // logic
@@ -74,27 +78,7 @@ app.get('/movie-api/movies/director/:name', passport.authenticate('jwt', { sessi
     })
 });
 
-//ALLOWS NEW REGISTERS 
-app.put('/movie-api/user/:userid', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOne({ 'userid': req.params.userid })
-        .then((user) => {
-            if (user) {
-                res.status(500).send("User already exists");
-            }
-            else {
-                Users.create({
-                    userid: req.body.userid,
-                    Name: req.body.Name,
-                    Email: req.body.Email,
-                    Birthday: req.body.Birthday,
-                    MovieListids: req.body.MovieListids,
-                    Password: req.body.Password
-                }).then((user) => {
-                    res.status(201).send(user)
-                })
-            }
-        })
-});
+
 //ALLOWS USERS TO UPDATE THEIR USER INFO
 app.post('/movie-api/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ 'userid': req.body.userId }, { $set: req.body }, { new: true }, (err, user) => {
@@ -102,6 +86,37 @@ app.post('/movie-api/users', passport.authenticate('jwt', { session: false }), (
     })
        
 });
+
+//CREATE NEW USER 
+app.post('/movie-api/user', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log(req.body)
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
+        .then((user) => {
+            if (user) {
+                //If the user is found, send a response that it already exists
+                return res.status(400).send(req.body.Name + ' already exists');
+            } else {
+                Users
+                    .create({
+                        Username: req.body.Username,
+                        Password: hashedPassword,
+                        Email: req.body.Email,
+                        Birthday: req.body.Birthday
+                    })
+                    .then((user) => { res.status(201).json(user) })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).send('Error: ' + error);
+                    });
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error: ' + error);
+        });
+});
+
 
 //ALLOWS USERS TO ADD MOVIE TO THEIR FAVORITE MOVIE LIST
 app.post('/movie-api/user/favoriteMovie', passport.authenticate('jwt', { session: false }), async (req, res) => {
