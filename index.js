@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Models = require('./models.js');
 const passport = require('passport');
 const cors = require('cors');
+const { check, validationResult, body, param  } = require('express-validator'); 
 
 
 const Movies = Models.Movie;
@@ -88,8 +89,14 @@ app.post('/movie-api/users', passport.authenticate('jwt', { session: false }), (
 });
 
 //CREATE NEW USER 
-app.post('/movie-api/user', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log(req.body)
+app.post('/movie-api/user',
+    //email must be email
+    body('Email').isEmail(),
+    passport.authenticate('jwt', { session: false }), (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
         .then((user) => {
@@ -102,7 +109,8 @@ app.post('/movie-api/user', passport.authenticate('jwt', { session: false }), (r
                         Username: req.body.Username,
                         Password: hashedPassword,
                         Email: req.body.Email,
-                        Birthday: req.body.Birthday
+                        Birthday: req.body.Birthday,
+                        UserId: req.body.UserId
                     })
                     .then((user) => { res.status(201).json(user) })
                     .catch((error) => {
