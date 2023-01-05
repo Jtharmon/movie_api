@@ -81,7 +81,7 @@ app.get('/movie-api/movies/director/:name', passport.authenticate('jwt', { sessi
 
 
 //ALLOWS USERS TO UPDATE THEIR USER INFO
-app.post('/movie-api/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/movie-api/users', passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ 'userid': req.body.userId }, { $set: req.body }, { new: true }, (err, user) => {
         res.send(user)
     })
@@ -91,8 +91,13 @@ app.post('/movie-api/users', passport.authenticate('jwt', { session: false }), (
 //CREATE NEW USER 
 app.post('/movie-api/user',
     //email must be email
-    body('Email').isEmail(),
-    passport.authenticate('jwt', { session: false }), (req, res) => {
+    [
+        check('Username', 'Username is required').isLength({ min: 5 }),
+        check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ],
+    (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });

@@ -7,7 +7,7 @@ require('./passport'); // Your local passport file
 
 function generateJWTToken(user) {
     return jwt.sign(user, jwtSecret, {
-        subject: user.Name,
+        subject: user.Username,
         expiresIn: '7d',
         algorithm: 'HS256',  
     });

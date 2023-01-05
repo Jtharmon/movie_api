@@ -10,7 +10,7 @@ let Users = Models.User,
 passport.use(
     new LocalStrategy(
         {
-            usernameField: 'Name',
+            usernameField: 'Username',
             passwordField: 'Password',
         },
         (username, password, callback) => {
