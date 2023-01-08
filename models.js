@@ -43,4 +43,8 @@ let User = mongoose.model('User', userSchema);
 module.exports.Movie = Movie;
 module.exports.User = User;
 
-mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true});
+//mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true});
+
+//mongoose.connect('mongodb + srv://myFlixDBadmin:Luther12@myflixdb.yk3wscy.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+
+mongoose.connect('process.env.Connection_URI', { useNewUrlParser: true, useUnifiedTopology: true });
