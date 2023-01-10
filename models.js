@@ -47,4 +47,8 @@ module.exports.User = User;
 
 //mongoose.connect('mongodb + srv://myFlixDBadmin:Luther12@myflixdb.yk3wscy.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
 
-mongoose.connect('process.env.Connection_URI', { useNewUrlParser: true, useUnifiedTopology: true });
+//mongoose.connect('process.env.Connection_URI', { useNewUrlParser: true, useUnifiedTopology: true });
+
+const uri = "mongodb+srv://myFlixDBadmin:Luther12@myflixdb.yk3wscy.mongodb.net/?retryWrites=true&w=majority";
+
+mongoose.connect(uri);
