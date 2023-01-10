@@ -41,7 +41,7 @@ app.use((err, req, res, next) => {
 
 
 // GET requests
-app.get('/movie-api/', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movie-api/',  (req, res) => {
     res.send('Welcome to my book club!');
 });
 
@@ -176,7 +176,11 @@ res.send('Successful DELETE request removing data on the user');
 });
 
 
-const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0', () => {
-    console.log('Listening on Port ' + port);
-});
+//const port = process.env.PORT || 8080;
+//app.listen(port, '0.0.0.0', () => {
+    //console.log('Listening on Port ' + port);
+//});
+
+
+.listen(process.env.PORT || 5000)
+
