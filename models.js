@@ -31,9 +31,8 @@ userSchema.statics.hashPassword = (password) => {
     return bcrypt.hashSync(password, 10);
 };
 
-userSchema.methods.validatePassword = function (Password) {
-    return Password === this.Password;
-};
+userSchema.methods.validatePassword = async function (Password) {
+    return await bcrypt.compare(Password, this.Password); };
 
 
 
@@ -50,5 +49,5 @@ module.exports.User = User;
 //mongoose.connect('process.env.Connection_URI', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const uri = "mongodb+srv://myFlixDBadmin:Luther12@myflixdb.yk3wscy.mongodb.net/?retryWrites=true&w=majority";
-
-mongoose.connect(uri);
+const options = { dbName: "myFlixDB" }
+mongoose.connect(uri,options);
