@@ -46,13 +46,13 @@ app.get('/movie-api/',  (req, res) => {
 });
 
 //RETURNS DOCUMENTATIONHTML
-app.get('/movie-api/documentation', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movie-api/documentation', (req, res) => {
     res.sendFile('public/documentation.html', { root: __dirname });
     
 });
 
 //RETURNS A LIST OF MOVIES
-app.get('/movie-api/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movie-api/movies', (req, res) => {
     Movies.find({}, (err, movies) => {
         res.send(movies)
     })
@@ -60,12 +60,12 @@ app.get('/movie-api/movies', passport.authenticate('jwt', { session: false }), (
 
 
 //GETS DATA ABOUT A MOVIE BY MOVIE TITLE
-app.get('/movie-api/movie/:title', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movie-api/movie/:title', (req, res) => {
 
 })
 
 //RETURNS DATA ABOUT A GENRE
-app.get('/movie-api/genre/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movie-api/genre/:name', (req, res) => {
     Movies.findOne({ 'Genre.Name': req.params.name }, (err, movies) => {
         res.send(movies.Genre)
 
@@ -73,7 +73,7 @@ app.get('/movie-api/genre/:name', passport.authenticate('jwt', { session: false 
 })
 
 //RETUENS DATA ABOUT A DIRECTOR
-app.get('/movie-api/movies/director/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/movie-api/movies/director/:name', (req, res) => {
     Movies.findOne({ 'Director.Name': req.params.name }, (err, movies) => {
         res.send(movies?.Director);
     })
@@ -81,7 +81,7 @@ app.get('/movie-api/movies/director/:name', passport.authenticate('jwt', { sessi
 
 
 //ALLOWS USERS TO UPDATE THEIR USER INFO
-app.put('/movie-api/users', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.put('/movie-api/users', (req, res) => {
     Users.findOneAndUpdate({ 'userid': req.body.userId }, { $set: req.body }, { new: true }, (err, user) => {
         res.send(user)
     })
