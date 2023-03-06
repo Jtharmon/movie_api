@@ -102,6 +102,10 @@ app.post('/movie-api/user',
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
         }
+        const newUserId = (null);
+        Users.sort('-userId').findOne({}, (err, user) => {
+            console.log(user);
+        });
     let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
         .then((user) => {
@@ -183,7 +187,18 @@ res.send('Successful DELETE request removing data on the user');
 
 //Generate new UserId
 
+function generateUserId() {
+    var UserId = null
+    Users.findOne({})
+        .then((user) => {
+            UserId = user.UserId+1
+
+        })
+}
+
 
 
 app.listen(process.env.PORT || 5000)
+
+
 
