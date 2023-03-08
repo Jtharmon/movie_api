@@ -22,7 +22,6 @@ let userSchema = mongoose.Schema({
     Password: { type: String, required: true },
     Email: { type: String, required: true },
     Birthday: Date,
-    UserId: { type: Number, required: true },
     MovieListids: { type: [Number], required: false }
 });
 
