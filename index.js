@@ -109,26 +109,19 @@ app.post('/movie-api/user',
                 //If the user is found, send a response that it already exists
                 return res.status(400).send(req.body.Name + ' already exists');
             } else {
-                UserId.countDocuments({}, (err, count) => { //Get the total number of documents in the UserId collection 
-                    if (err) {
-                        console.error(err);
-                        res.status(500).send('Error: ' + err);
-                    } else {
-                        Users
-                            .create({
-                                Username: req.body.Username,
-                                Password: hashedPassword,
-                                Email: req.body.Email,
-                                Birthday: req.body.Birthday,
-                                UserId: count + 1
-                            })
-                            .then((user) => { res.status(201).json(user) })
-                            .catch((error) => {
-                                console.error(error);
-                                res.status(500).send('Error: ' + error);
-                            });
-                    }
-                });
+                Users
+                    .create({
+                        Username: req.body.Username,
+                        Password: hashedPassword,
+                        Email: req.body.Email,
+                        Birthday: req.body.Birthday,
+                        UserId: req.body.UserId
+                    })
+                    .then((user) => { res.status(201).json(user) })
+                    .catch((error) => {
+                        console.error(error);
+                        res.status(500).send('Error: ' + error);
+                    });
             }
         })
         .catch((error) => {
@@ -136,7 +129,6 @@ app.post('/movie-api/user',
             res.status(500).send('Error: ' + error);
         });
 });
-
 
 
 //ALLOWS USERS TO ADD MOVIE TO THEIR FAVORITE MOVIE LIST
