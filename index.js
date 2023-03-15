@@ -32,7 +32,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(cors({
-    origin: 'http://localhost:1234'
+    origin: 'http://localhost:1234',
+    credentials: true
 }));
 
 
