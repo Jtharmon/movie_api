@@ -45,7 +45,6 @@ passport.use(
     new JWTStrategy(
         {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: process.env.JWT_SECRET,
         },
         (jwtPayload, callback) => {
             return Users.findOne({ _id: jwtPayload._id })
