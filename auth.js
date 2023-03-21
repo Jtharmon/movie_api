@@ -26,7 +26,6 @@ module.exports = (router) => {
                         user: user,
                         error: error,
                         info: info,
-                        request: req,
                     });
                 }
                 req.login(user, { session: false }, (error) => {
