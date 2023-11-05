@@ -3,11 +3,15 @@ const Models = require('./models.js');
 const passport = require('passport');
 const cors = require('cors');
 const { check, validationResult, body, param } = require('express-validator');
+require('dotenv').config()
 
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
+//mongoose.connect('mongodb://localhost:27017/CinemaDB', { useNewUrlParser: true, useUnifiedTopology: true }); // for local testing
+mongoose.connect(process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.set('strictQuery', true);
 
 const express = require('express');
 const morgan = require('morgan');
@@ -179,11 +183,11 @@ app.delete('/movie-api/user/:userid', cors(), passport.authenticate('jwt', { ses
 });
 
 
-//const port = process.env.PORT || 8080;
-//app.listen(port, '0.0.0.0', () => {
-//console.log('Listening on Port ' + port);
-//});
+// //const port = process.env.PORT || 8080;
+// //app.listen(port, '0.0.0.0', () => {
+// //console.log('Listening on Port ' + port);
+// //});
 
 
-app.listen(process.env.PORT || 5000)
+app.listen(process.env.PORT || 8080)
 

@@ -248,3 +248,7 @@ Timestamp: Thu Oct 20 2022 18:59:26 GMT-0400 (Eastern Daylight Time)
 ::1 - - [10/Jan/2023:18:25:24 +0000] "POST /movie-api/user HTTP/1.1" 201 198 "-" "PostmanRuntime/7.30.0"
 ::1 - - [10/Jan/2023:18:27:17 +0000] "POST /movie-api/user HTTP/1.1" 201 198 "-" "PostmanRuntime/7.30.0"
 ::1 - - [11/Jan/2023:00:51:11 +0000] "POST /movie-api/user HTTP/1.1" 201 195 "-" "PostmanRuntime/7.30.0"
+::1 - - [05/Nov/2023:21:27:59 +0000] "GET / HTTP/1.1" 404 139 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+::1 - - [05/Nov/2023:21:28:30 +0000] "GET /movie_api HTTP/1.1" 404 148 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+::1 - - [05/Nov/2023:21:28:43 +0000] "GET /movie-api HTTP/1.1" 200 24 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+::1 - - [05/Nov/2023:21:28:43 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:8080/movie-api" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
